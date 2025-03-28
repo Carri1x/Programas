@@ -8,6 +8,8 @@ import dao.DepartamentsDAO;
 import dao.EmpleatsDAO;
 import dto.Departament;
 import dto.Empleat;
+import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.*;
@@ -144,12 +146,12 @@ public class Main {
                     
         // 17A. Guarda en un Map un registre per a cada Departament (que tinga treballadors) que tinga associat com a valor la llista d'empleats d'eixe departament
         ejercicioX(++index);
-            var mapaPorDepartamento = empleados.stream()
+            final var mapaPorDepartamento = empleados.stream()
                     .collect(Collectors.groupingBy(em -> em.getDepartament()));
             
         // 17B. Igual que l'anterior pero la llista no serà d'empleats sino del nom dels empleats
         ejercicioX(++index);
-            var mapaDepConNomEmp = empleados.stream()
+            final var mapaDepConNomEmp = empleados.stream()
                     .collect(Collectors.groupingBy(Empleat::getDepartament,
                                     Collectors.mapping(Empleat::getNom, 
                                             Collectors.toList())
@@ -157,14 +159,29 @@ public class Main {
             
         // 17C. Igual que l'anterior pero amb els empleats ordenats alfabèticament
         ejercicioX(++index);
-            mapaDepConNomEmp = empleados.stream()
+            final var mapaDepConNomEmpNuevo = empleados.stream()
                     .collect(Collectors.groupingBy(Empleat::getDepartament,
                                     Collectors.mapping(Empleat::getNom, 
-                                            Collectors.collectingAndThen(Collectors.toList(),list -> list.sort(String::compareTo)))
-                            ));
+                                            Collectors.collectingAndThen(
+                                                    Collectors.toList(), list -> { Collections.sort(list);
+                                                                                    return list; }))));
+            
         // 18A. Obtín un Map que continga per a cada departament una llista d'enters grans (BigInteger) que es corresponguen amb les edats dels empleats d'eixe departament
+        ejercicioX(++index);
+            empleados.stream()
+                    .collect(Collectors.groupingBy(Empleat::getDepartament,
+                                    Collectors.mapping(em -> new BigInteger(Integer.toString(em.getEdat())) , Collectors.toList())));//hacer un forEach para comprobar si está yendo bien
+            
         // 18B. El mateix que abans però en comptes de l'edat, el probable següent número primer
+        ejercicioX(index);
+            empleados.stream()
+                    .collect(Collectors.groupingBy(Empleat::getDepartament, 
+                                    Collectors.mapping(em -> BigInteger.valueOf(em.getEdat()).nextProbablePrime(), Collectors.toList())));
         // 19. Obtín un Map que continga per a cada departament l'empleat més jove.
+        ejercicioX(++index);
+            empleados.stream()
+                    ;
+                    //groupingBy()
         // 20. Obtín un String que continga el mateix que abans, amb el format "Departament1:Empleat1, Departament2:Empleat2 ..."
         // 21. Obtín un Map que conté com a clau el DNI dels empleats i com a valor el nom d'eixe empleat
         // 21. Obtín una llista d'Strings que continga DNI dels empleats i el nom d'eixe empleat amb el format DNI - Nom. Llista ordenada per DNI
